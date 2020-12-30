@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "port": 23354,
+            "name": "api:debug",
+            "protocol": "inspector"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "port": 32248,
+            "name": "queue:debug",
+            "protocol": "inspector"
+        }
+    ]
+}
