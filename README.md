@@ -1,2 +1,2 @@
-# security
+# Security
 Security API based on NodeJS.
