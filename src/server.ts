@@ -12,8 +12,11 @@ import { environment } from '@environments/environment';
 
 import { INJECTION } from "settings/injection";
 
-import { IUserService } from "@application/interfaces/users.service";
-import { UserService } from "@application/services/user.service";
+import { IUserAppService } from "@application/interfaces/users.service";
+import { UserAppService } from "@application/services/user.service";
+
+import { IUserService } from "@domain/services/interfaces/user.service";
+import { UserService } from "@domain/services/user.service";
 
 import { IUserRepository } from "@domain/interfaces/user.repository";
 import { UserRepository } from "@infrastructure/repositories/user.repository";
@@ -29,6 +32,7 @@ class Server {
     }
 
     bind(): void {
+        container.bind<IUserAppService>(INJECTION.IUserAppService).to(UserAppService);
         container.bind<IUserService>(INJECTION.IUserService).to(UserService);
         container.bind<IUserRepository>(INJECTION.IUserRepository).to(UserRepository);
     }

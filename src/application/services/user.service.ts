@@ -4,23 +4,23 @@ import { UserResponse } from "../responses/user.response";
 
 import { INJECTION } from "settings/injection";
 
-import { IUserService } from "@application/interfaces/users.service";
+import { IUserAppService } from "@application/interfaces/users.service";
 
-import { User } from "@domain/models/user.model";
+import { IUser } from "@domain/models/user.model";
 
-import { IUserRepository } from "@domain/interfaces/user.repository";
-import { UserRepository } from "@infrastructure/repositories/user.repository";
+import { IUserService } from "@domain/services/interfaces/user.service";
+import { UserService } from "@domain/services/user.service";
 
 @injectable()
-export class UserService implements IUserService {
-    private _userRepository: IUserRepository;
+export class UserAppService implements IUserAppService {
+    private _userService: IUserService;
 
-    constructor(@inject(INJECTION.IUserRepository) userRepository: UserRepository) {
-        this._userRepository = userRepository;
+    constructor(@inject(INJECTION.IUserService) userService: UserService) {
+        this._userService = userService;
     }
 
     async getById(user_id: string): Promise<UserResponse> {
-        const user: User = await this._userRepository.getById(user_id);
+        const user: IUser = await this._userService.validate(user_id);
 
         return new UserResponse(user.user_id, user.username);
     }
