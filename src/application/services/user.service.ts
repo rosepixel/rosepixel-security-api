@@ -2,7 +2,7 @@ import { injectable, inject } from "inversify";
 
 import { UserResponse } from "../responses/user.response";
 
-import { INJECTION } from "@injections/injection";
+import { INJECTION } from "settings/injection";
 
 import { IUserService } from "@application/interfaces/users.service";
 

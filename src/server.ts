@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "reflect-metadata";
 
 import cors from "cors";
@@ -9,7 +10,7 @@ import { InversifyExpressServer } from "inversify-express-utils";
 
 import { environment } from '@environments/environment';
 
-import { INJECTION } from "@injections/injection";
+import { INJECTION } from "settings/injection";
 
 import { IUserService } from "@application/interfaces/users.service";
 import { UserService } from "@application/services/user.service";

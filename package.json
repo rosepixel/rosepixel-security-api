@@ -4,10 +4,9 @@
     "description": "Security API based on NodeJS.",
     "main": "index.js",
     "scripts": {
-        "develop": "node -r tsconfig-paths/register -r ts-node/register ./src/server.ts",
-        "dev": "nodemon --watch \"src/\" --exec \"ts-node src/server.ts\" -e ts",
-        "build": "tsc -p",
-        "start": "node dist/server.js"
+        "start:development": "node -r tsconfig-paths/register -r ts-node/register ./src/server.ts",
+        "build:production": "tsc -p",
+        "start:production": "npx pm2 start pm2.yaml"
     },
     "repository": {
         "type": "git",
@@ -21,12 +20,16 @@
     },
     "homepage": "https://github.com/rosepixel/rosepixel-security-api#readme",
     "dependencies": {
+        "@types/redis": "^2.8.28",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "helmet": "^4.3.1",
         "inversify": "^5.0.5",
         "inversify-express-utils": "^6.3.2",
-        "reflect-metadata": "^0.1.13"
+        "pm2": "^4.5.1",
+        "redis": "^3.0.2",
+        "reflect-metadata": "^0.1.13",
+        "sequelize": "^6.3.5"
     },
     "devDependencies": {
         "@types/cors": "^2.8.9",
