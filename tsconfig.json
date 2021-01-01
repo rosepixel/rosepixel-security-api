@@ -1,15 +1,53 @@
 {
     "compilerOptions": {
-        "target": "es2017",
-        "outDir": "dist",
-        "module": "commonjs",
-        "strict": true,
+        "baseUrl": "src",
+        "emitDecoratorMetadata": true,
         "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "paths": {
+            "@environments/*": [
+                "./environments/*"
+            ],
+            "@injections/*": [
+                "./injections/*"
+            ],
+            "@controllers/*": [
+                "./controllers/*"
+            ],
+            "@application/*": [
+                "./application/*"
+            ],
+            "@domain/*": [
+                "./domain/*"
+            ],
+            "@infrastructure/*": [
+                "./infrastructure/*"
+            ],
+            "@tests/*": [
+                "../tests/*"
+            ],
+        },
+        "pretty": true,
+        "rootDirs": [
+            "src",
+            "tests"
+        ],
+        "sourceMap": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "strict": true,
+        "target": "es2019"
     },
     "include": [
-        "src/**/*"
+        "src",
+        "tests"
     ],
     "exclude": [
         "node_modules"

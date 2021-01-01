@@ -1,5 +1,5 @@
-export const environment = {
-    environment: "development",
-    domain: "localhost",
+const environment = {
     port: 23354
 }
+
+export { environment };
