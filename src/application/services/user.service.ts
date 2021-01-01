@@ -19,11 +19,9 @@ export class UserService implements IUserService {
         this._userRepository = userRepository;
     }
 
-    getById(id: string): UserResponse {
-        const user: User = this._userRepository.getById(id);
-        
-        const userResponse = new UserResponse(user.id, user.username);
+    async getById(user_id: string): Promise<UserResponse> {
+        const user: User = await this._userRepository.getById(user_id);
 
-        return userResponse;
+        return new UserResponse(user.user_id, user.username);
     }
 }

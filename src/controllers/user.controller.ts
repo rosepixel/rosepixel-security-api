@@ -1,5 +1,5 @@
 import { inject } from "inversify";
-import { httpGet, interfaces, controller, BaseHttpController } from "inversify-express-utils";
+import { httpGet, interfaces, controller, BaseHttpController, requestParam } from "inversify-express-utils";
 
 import { INJECTION } from "settings/injection";
 
@@ -17,10 +17,10 @@ export class Controller extends BaseHttpController implements interfaces.Control
         this._userService = userService;
     }
 
-    @httpGet("/")
-    public getById(id: string): interfaces.IHttpActionResult {
-        const userResponse: UserResponse = this._userService.getById(id);
+    @httpGet("/:user_id")
+    public async getById(@requestParam("user_id") user_id: string): Promise<interfaces.IHttpActionResult> {
+        const user: UserResponse = await this._userService.getById(user_id);
 
-        return this.ok(userResponse);
+        return this.ok(user);
     }
 }
