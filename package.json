@@ -22,7 +22,6 @@
     "dependencies": {
         "@types/bluebird": "^3.5.33",
         "@types/redis": "^2.8.28",
-        "@types/uuid": "^8.3.0",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "helmet": "^4.3.1",
@@ -32,8 +31,7 @@
         "pm2": "^4.5.1",
         "redis": "^3.0.2",
         "reflect-metadata": "^0.1.13",
-        "sequelize": "^6.3.5",
-        "uuid": "^8.3.2"
+        "sequelize": "^6.3.5"
     },
     "devDependencies": {
         "@types/cors": "^2.8.9",

@@ -20,6 +20,12 @@ export class UserAppService implements IUserAppService {
     async getById(user_id: string): Promise<UserResponse> {
         const user: IUser = await this._userService.validate(user_id);
 
-        return new UserResponse(user.user_id, user.username);
+        return new UserResponse(
+            user.user_id,
+            user.username,
+            user.email,
+            user.created_at,
+            user.updated_at
+        );
     }
 }
