@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 
-import { INJECTION } from "@settings/injection";
+import { INJECTION } from "@utilities/injection";
 
 import { IUser } from "@domain/models/user.model";
 

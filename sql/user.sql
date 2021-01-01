@@ -6,3 +6,8 @@ CREATE TABLE `security`.`user` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
+
+CREATE TRIGGER `security`.`before_insert_user`
+BEFORE INSERT ON `security`.`user`
+   FOR EACH ROW
+   SET NEW.`user_id` = UUID_TO_BIN(UUID());

@@ -10,7 +10,7 @@ import { InversifyExpressServer } from "inversify-express-utils";
 
 import { environment } from '@environments/environment';
 
-import { INJECTION } from "settings/injection";
+import { INJECTION } from "@utilities/injection";
 
 import { IUserAppService } from "@application/interfaces/users.service";
 import { UserAppService } from "@application/services/user.service";

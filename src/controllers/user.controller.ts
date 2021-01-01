@@ -1,7 +1,7 @@
 import { inject } from "inversify";
 import { httpGet, interfaces, controller, BaseHttpController, requestParam } from "inversify-express-utils";
 
-import { INJECTION } from "settings/injection";
+import { INJECTION } from "@utilities/injection";
 
 import { UserResponse } from "@application/responses/user.response";
 

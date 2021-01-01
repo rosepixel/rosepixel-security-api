@@ -1,13 +1,11 @@
 import { injectable, inject } from "inversify";
 
-import { UserResponse } from "../responses/user.response";
-
-import { INJECTION } from "settings/injection";
+import { INJECTION } from "@utilities/injection";
 
 import { IUserAppService } from "@application/interfaces/users.service";
+import { UserResponse } from "@application/responses/user.response";
 
 import { IUser } from "@domain/models/user.model";
-
 import { IUserService } from "@domain/services/interfaces/user.service";
 import { UserService } from "@domain/services/user.service";
 

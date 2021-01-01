@@ -16,8 +16,8 @@
             "@environments/*": [
                 "./environments/*"
             ],
-            "@settings/*": [
-                "./settings/*"
+            "@utilities/*": [
+                "./utilities/*"
             ],
             "@injections/*": [
                 "./injections/*"
