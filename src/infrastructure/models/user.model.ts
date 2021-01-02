@@ -1,16 +1,18 @@
 import { Model, DataTypes } from "sequelize";
 
-import { database } from "@utilities/database/database";
+import { database } from "@utilities/database";
 
 import { IUser } from "@domain/models/user.model";
 
 export interface IUserAttributes extends Model<IUserAttributes, IUser> {
-    user_id: string;
+    user_id?: string;
     username: string;
     email: string;
     password: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at?: Date;
+    updated_at?: Date;
+    secret: string;
+    iv: string;
 }
 
 export const User = database.connection.define<IUserAttributes, IUser>("user", {
@@ -39,6 +41,14 @@ export const User = database.connection.define<IUserAttributes, IUser>("user", {
     updated_at: {
         type: 'TIMESTAMP',
         allowNull: true
+    },
+    secret: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    iv: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     freezeTableName: true,
