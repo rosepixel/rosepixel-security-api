@@ -5,6 +5,8 @@ const environment = {
     redis: {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
+        user: process.env.REDIS_USER,
+        password: process.env.REDIS_PASSWORD,
         database: process.env.REDIS_DATABASE
     },
     database: {

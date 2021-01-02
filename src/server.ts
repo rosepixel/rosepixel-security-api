@@ -22,6 +22,8 @@ import { IUserRepository } from "@domain/interfaces/user.repository";
 import { UserRepository } from "@infrastructure/repositories/user.repository";
 
 import "@controllers/user.controller";
+import { RedisService } from "@utilities/redis";
+import { IRedisService } from "@utilities/interfaces/redis";
 
 let container = new Container();
 
@@ -32,6 +34,8 @@ class Server {
     }
 
     bind(): void {
+        container.bind<IRedisService>(INJECTION.IRedisService).to(RedisService);
+
         container.bind<IUserAppService>(INJECTION.IUserAppService).to(UserAppService);
         container.bind<IUserService>(INJECTION.IUserService).to(UserService);
         container.bind<IUserRepository>(INJECTION.IUserRepository).to(UserRepository);

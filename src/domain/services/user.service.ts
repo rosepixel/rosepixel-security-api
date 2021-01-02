@@ -4,10 +4,12 @@ import { INJECTION } from "@utilities/injection";
 
 import { IUser } from "@domain/models/user.model";
 
+import { IUserService } from "./interfaces/user.service";
+
 import { IUserRepository } from "@domain/interfaces/user.repository";
 
 @injectable()
-export class UserService {
+export class UserService implements IUserService {
 
     private _userRepository: IUserRepository;
 
@@ -15,11 +17,21 @@ export class UserService {
         this._userRepository = userRepository;
     }
 
-    async validate(user_id: string): Promise<IUser> {
+    async validateById(user_id: string): Promise<IUser> {
         const user: IUser | null = await this._userRepository.getById(user_id);
 
         if (user === null) {
             throw Error("Usuário não encontrado");
+        }
+
+        return user;
+    }
+
+    async validateByEmailAndPassword(email: string, password: string): Promise<IUser> {
+        const user: IUser | null = await this._userRepository.getByEmailAndPassword(email, password);
+
+        if (user === null) {
+            throw Error("Email e senha não correspondem");
         }
 
         return user;

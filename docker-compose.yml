@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  mysql:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    volumes:
+      - ./mariadb/data:/var/lib/mariadb
+      - ./mariadb/conf/mariadbd.conf:/etc/mariadb/mariadb.conf.d/mariadbd.cnf
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=r3b3l1on
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  redis:
+    container_name: redis
+    image: 'redis'
+    restart: always
+    hostname: redis
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass r3b3l1on
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq
+    restart: always
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "demigod"
+      RABBITMQ_DEFAULT_PASS: "r3b3l1on"
+    ports:
+      - "5672:5672"
+      - "15672:15672"

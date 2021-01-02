@@ -18,8 +18,7 @@ export interface IUserAttributes extends Model<IUserAttributes, IUser> {
 export const User = database.connection.define<IUserAttributes, IUser>("user", {
     user_id: {
         type: DataTypes.UUID,
-        allowNull: false,
-        autoIncrement: true,
+        allowNull: true,
         primaryKey: true
     },
     username: {
@@ -52,5 +51,6 @@ export const User = database.connection.define<IUserAttributes, IUser>("user", {
     }
 }, {
     freezeTableName: true,
+    timestamps: false,
     tableName: "user"
 });
