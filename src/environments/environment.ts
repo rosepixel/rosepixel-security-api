@@ -1,7 +1,7 @@
 const environment = {
-    environment: process.env.NODE_ENV,
-    port: process.env.SERVER_PORT,
-    secred: process.env.SERVER_SECRET,
+    environment: String(process.env.NODE_ENV),
+    port: Number(process.env.SERVER_PORT),
+    secret: String(process.env.SERVER_SECRET),
     redis: {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,

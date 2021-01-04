@@ -7,23 +7,23 @@ import helmet from "helmet";
 import { urlencoded, json } from 'body-parser';
 import { Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
+import * as userAgent from "express-useragent";
 
 import { environment } from '@environments/environment';
 
 import { INJECTION } from "@utilities/injection";
 
-import { IUserAppService } from "@application/interfaces/users.service";
-import { UserAppService } from "@application/services/user.service";
+import { IUsersAppService } from "@application/interfaces/users.app-service";
+import { IUsersService } from "@domain/services/interfaces/users.service";
+import { IUsersRepository } from "@domain/repositories/users.repository";
 
-import { IUserService } from "@domain/services/interfaces/user.service";
-import { UserService } from "@domain/services/user.service";
+import { UsersAppService } from "@application/services/users.app-service";
+import { UsersService } from "@domain/services/users.service";
+import { UsersRepository } from "@infrastructure/repositories/users.repository";
 
-import { IUserRepository } from "@domain/interfaces/user.repository";
-import { UserRepository } from "@infrastructure/repositories/user.repository";
+import { security } from "@infrastructure/contexts/security.context";
 
 import "@controllers/user.controller";
-import { RedisService } from "@utilities/redis";
-import { IRedisService } from "@utilities/interfaces/redis";
 
 let container = new Container();
 
@@ -34,21 +34,22 @@ class Server {
     }
 
     bind(): void {
-        container.bind<IRedisService>(INJECTION.IRedisService).to(RedisService);
-
-        container.bind<IUserAppService>(INJECTION.IUserAppService).to(UserAppService);
-        container.bind<IUserService>(INJECTION.IUserService).to(UserService);
-        container.bind<IUserRepository>(INJECTION.IUserRepository).to(UserRepository);
+        container.bind<IUsersAppService>(INJECTION.IUsersAppService).to(UsersAppService);
+        container.bind<IUsersService>(INJECTION.IUsersService).to(UsersService);
+        container.bind<IUsersRepository>(INJECTION.IUsersRepository).to(UsersRepository);
     }
 
     start() {
         let server: InversifyExpressServer = new InversifyExpressServer(container);
 
+        security.authenticate().then(() => console.log("Database connected"));
+        
         server.setConfig((app) => {
             app.use(urlencoded({ extended: true }));
             app.use(json());
             app.use(helmet());
             app.use(cors());
+            app.use(userAgent.express());
         });
 
         let app = server.build();

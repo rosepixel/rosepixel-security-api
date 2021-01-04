@@ -3,14 +3,12 @@ import { RedisClient } from "redis";
 
 import { environment } from "@environments/environment";
 
-import { IRedisService } from "@utilities/interfaces/redis";
+import { IRedisContext } from "@infrastructure/contexts/interfaces/redis.context";
 
 @injectable()
-export class RedisService implements IRedisService {
-    public readonly client: RedisClient;
-
+export class RedisContext extends RedisClient implements IRedisContext {
     constructor() {
-        this.client = new RedisClient({
+        super({
             port: Number(environment.redis.port),
             host: environment.redis.host,
             password: environment.redis.password,

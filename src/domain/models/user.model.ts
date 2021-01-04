@@ -1,10 +1,15 @@
+import { ICredential } from "@domain/models/credential.model";
+import { ISecret } from "@domain/models/secret.model";
+import { IAgent } from "@domain/models/agent.model";
+
 export interface IUser {
-    user_id?: string;
+    userId: string;
     username: string;
     email: string;
     password: string;
-    created_at?: Date;
-    updated_at?: Date;
-    secret: string;
-    iv: string;
+    createdAt: Date;
+    updatedAt: Date;
+    credentials: ICredential[];
+    secret: ISecret;
+    agents: IAgent[];
 }

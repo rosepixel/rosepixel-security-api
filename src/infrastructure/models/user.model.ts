@@ -1,56 +1,43 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, Table, Column, UpdatedAt, CreatedAt, PrimaryKey, HasMany, HasOne, BelongsToMany } from "sequelize-typescript";
 
-import { database } from "@utilities/database";
+import { Credential } from "@infrastructure/models/credential.model";
+import { Secret } from "@infrastructure/models/secret.model";
+import { Agent } from "@infrastructure/models/agent.model";
+import { Policy } from "./policy.model";
+import { UserPolicy } from "./user-policy.model";
 
-import { IUser } from "@domain/models/user.model";
-
-export interface IUserAttributes extends Model<IUserAttributes, IUser> {
-    user_id?: string;
-    username: string;
-    email: string;
-    password: string;
-    created_at?: Date;
-    updated_at?: Date;
-    secret: string;
-    iv: string;
-}
-
-export const User = database.connection.define<IUserAttributes, IUser>("user", {
-    user_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        primaryKey: true
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    created_at: {
-        type: 'TIMESTAMP',
-        allowNull: true
-    },
-    updated_at: {
-        type: 'TIMESTAMP',
-        allowNull: true
-    },
-    secret: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    iv: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-}, {
-    freezeTableName: true,
-    timestamps: false,
+@Table({
+    timestamps: true,
     tableName: "user"
-});
+})
+export class User extends Model<User> {
+    @Column({ field: "user_id", primaryKey: true })
+    userId!: string;
+
+    @Column
+    username!: string;
+
+    @Column
+    email!: string;
+
+    @Column
+    password!: string;
+
+    @Column({ field: "created_at" })
+    createdAt!: Date;
+
+    @Column({ field: "updated_at" })
+    updatedAt!: Date;
+
+    @HasMany(() => Credential)
+    credentials!: Credential[];
+
+    @HasOne(() => Secret)
+    secret!: Secret;
+
+    @HasMany(() => Agent)
+    agents!: Agent[];
+
+    @BelongsToMany(() => Policy, () => UserPolicy)
+    policies!: Policy[];
+}
