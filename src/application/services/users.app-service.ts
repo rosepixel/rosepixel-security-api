@@ -1,5 +1,3 @@
-import * as jwt from "jsonwebtoken";
-
 import { injectable, inject } from "inversify";
 
 import { environment } from "@environments/environment";
