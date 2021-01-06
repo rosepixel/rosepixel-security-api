@@ -19,6 +19,7 @@ import { ISessionResponse } from "@application/responses/session.response";
 
 import { ISecret } from "@domain/models/secret.model";
 import { ICredential } from "@domain/models/credential.model";
+import { Secret } from "@infrastructure/models/secret.model";
 
 @injectable()
 export class UsersAppService implements IUsersAppService {
@@ -31,20 +32,22 @@ export class UsersAppService implements IUsersAppService {
     ) { }
 
     async register(username: string, email: string, password: string): Promise<void> {
-        const encrypted = cryptography.hmac(password, environment.secret);
+        const hash = cryptography.hmac(password, environment.secret);
 
         const secret = cryptography.secret();
         const vector = cryptography.vector();
 
-        // await this.usersRepository.create({
-        //     username,
-        //     email,
-        //     secret: {
-        //         secret,
-        //         vector
-        //     } as ISecret,
-        //     credentials: []
-        // });
+        await this.usersRepository.create({
+            username,
+            email,
+            secret: {
+                secret,
+                vector
+            } as ISecret,
+            credentials: [{
+                password: hash
+            }] as ICredential[]
+        } as IUser);
     }
 
     async signIn(request: ISignInRequest): Promise<ISessionResponse> {

@@ -11,8 +11,8 @@ export class UsersRepository implements IUsersRepository {
 
     constructor() { }
 
-    public async create(user: IUser) {
-        await User.create(user);
+    public async create(user: IUser): Promise<IUser> {
+        return await User.create(user);
     }
 
     public async getByEmailAndPassword(email: string, password: string): Promise<IUser | null> {
