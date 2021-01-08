@@ -25,26 +25,14 @@ export class Policy {
     user: User;
 
     @ManyToMany(() => Group)
-    @JoinTable({
-        name: "policy_group",
-        joinColumn: { name: "policy_id", referencedColumnName: "policy_id" },
-        inverseJoinColumn: { name: "group_id", referencedColumnName: "group_id" }
-    })
+    @JoinTable()
     groups: Group[];
 
     @ManyToMany(() => Policy, (policy) => policy.roles, { eager: false })
-    @JoinTable({
-        name: "policy_role",
-        joinColumn: { name: "policy_id", referencedColumnName: "policy_id" },
-        inverseJoinColumn: { name: "role_id", referencedColumnName: "role_id" }
-    })
+    @JoinTable()
     roles: Role[];
 
     @ManyToMany(() => Policy, (policy) => policy.claims, { eager: false })
-    @JoinTable({
-        name: "policy_claim",
-        joinColumn: { name: "policy_id", referencedColumnName: "policy_id" },
-        inverseJoinColumn: { name: "claim_id", referencedColumnName: "claim_id" }
-    })
+    @JoinTable()
     claims: Claim[];
 }

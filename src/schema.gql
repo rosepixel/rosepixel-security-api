@@ -2,11 +2,64 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Role {
+  roleId: String!
+  name: String!
+  description: String!
+}
+
+type Claim {
+  type: ClaimType!
+  claimId: String!
+  key: String!
+  value: String!
+}
+
+"""Tipos suportados pelas claims."""
+enum ClaimType {
+  """Define um tipo data."""
+  DATE
+
+  """Define um tipo texto."""
+  STRING
+
+  """Define um tipo número inteiro."""
+  INTEGER
+
+  """Define um tipo número fracionário."""
+  FLOAT
+}
+
+type Group {
+  groupId: String!
+  name: String!
+  createdAt: DateTime!
+  roles: [Role!]!
+  claims: [Claim!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Policy {
+  policyId: String!
+  createdAt: DateTime!
+  expiresAt: DateTime
+  user: User!
+  groups: [Group!]!
+  roles: [Role!]!
+  claims: [Claim!]!
+}
+
 type User {
   userId: String!
   name: String!
   email: String!
   password: String!
+  policies: [Policy!]!
+  createdAt: DateTime!
 }
 
 type AuthType {
