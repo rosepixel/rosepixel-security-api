@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { registerEnumType } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ClaimType } from './claim-type.enum';
+
+import { Claim } from './claim.entity';
 
 import { ClaimService } from './claim.service';
 import { ClaimResolver } from './claim.resolver';
@@ -26,6 +29,12 @@ registerEnumType(ClaimType, {
 });
 
 @Module({
-    providers: [ClaimService, ClaimResolver]
+    imports: [
+        TypeOrmModule.forFeature([Claim])
+    ],
+    providers: [
+        ClaimService,
+        ClaimResolver
+    ]
 })
 export class ClaimModule { }

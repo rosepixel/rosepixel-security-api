@@ -6,5 +6,5 @@
     "password": "r3b3l1on",
     "database": "security",
     "entities": ["src/**/*.entity.ts"],
-    "synchronize": false
+    "synchronize": true
 }
