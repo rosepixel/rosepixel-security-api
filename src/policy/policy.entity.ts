@@ -1,6 +1,6 @@
 import { ObjectType } from "@nestjs/graphql";
 
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Group } from "src/group/group.entity";
 import { Role } from "src/role/role.entity";
@@ -10,29 +10,23 @@ import { User } from "src/user/user.entity";
 @ObjectType()
 @Entity()
 export class Policy {
-    @PrimaryGeneratedColumn("uuid", {
-        name: "policy_id"
-    })
-    policyId: string;
+    @PrimaryGeneratedColumn("uuid")
+    policy_id: string;
 
-    @Column({ name: "created_at" })
-    createdAt: Date;
+    @Column()
+    created_at: Date;
 
-    @Column({ name: "expires_at" })
-    expiresAt?: Date;
+    @Column()
+    expires_at?: Date;
 
-    @ManyToOne(() => User, (user) => user.policies)
+    @OneToMany(() => User, (user) => user.policies)
     user: User;
 
-    @ManyToMany(() => Group)
-    @JoinTable()
+    @ManyToMany(() => Group, { eager: false })
+    @JoinTable({
+        name: "policy_group",
+        joinColumn: { name: "policy_id", referencedColumnName: "policy_id" },
+        inverseJoinColumn: { name: "group_id", referencedColumnName: "group_id" }
+    })
     groups: Group[];
-
-    @ManyToMany(() => Policy, (policy) => policy.roles, { eager: false })
-    @JoinTable()
-    roles: Role[];
-
-    @ManyToMany(() => Policy, (policy) => policy.claims, { eager: false })
-    @JoinTable()
-    claims: Claim[];
 }

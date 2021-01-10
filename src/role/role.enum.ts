@@ -1,5 +1,6 @@
 export enum Role {
-    Administrator = "administrator",
-    Boss = "boss",
-    Collaborator = "collaborator"
+    FindAllUsers = "find-all-users",
+    GetUserById = "get-user-by-id",
+    GetUserByEmail = "get-user-by-email",
+    UpdateUser = "update-user"
 }

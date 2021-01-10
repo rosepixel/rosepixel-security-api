@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Roles } from 'src/role/roles.decorator';
+import { UseRole } from 'src/role/role.decorator';
 import { GqlAuthGuard } from 'src/auth/jwt-auth.guard';
 
 import { CreateUserInput } from './odt/create-user.input';
@@ -10,12 +10,11 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { Role } from 'src/role/role.enum';
 
-
 @Resolver()
 export class UserResolver {
     constructor(private userService: UserService) { }
 
-    @Roles(Role.Administrator, Role.Boss)
+    @UseRole(Role.FindAllUsers)
     @UseGuards(GqlAuthGuard)
     @Query(() => [User])
     async findAllUsers(): Promise<User[]> {
@@ -24,6 +23,7 @@ export class UserResolver {
         return users;
     }
 
+    @UseRole(Role.GetUserById)
     @UseGuards(GqlAuthGuard)
     @Query(() => User)
     async getUserById(@Args('userId') userId: string): Promise<User> {
@@ -32,6 +32,7 @@ export class UserResolver {
         return user;
     }
 
+    @UseRole(Role.GetUserByEmail)
     @Query(() => User)
     async getUserByEmail(@Args('email') email: string): Promise<User> {
         const user = await this.userService.getUserByEmail(email);
@@ -46,6 +47,7 @@ export class UserResolver {
         return user;
     }
 
+    @UseRole(Role.UpdateUser)
     @UseGuards(GqlAuthGuard)
     @Mutation(() => User)
     async updateUser(

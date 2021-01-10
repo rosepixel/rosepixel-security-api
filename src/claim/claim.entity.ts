@@ -10,7 +10,7 @@ export class Claim {
     @PrimaryGeneratedColumn("uuid", {
         name: "claim_id"
     })
-    claimId: string;
+    claim_id: string;
 
     @Field(() => ClaimType)
     @Column()

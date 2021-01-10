@@ -8,22 +8,28 @@ import { Claim } from "src/claim/claim.entity";
 @ObjectType()
 @Entity()
 export class Group {
-    @PrimaryGeneratedColumn("uuid", {
-        name: "group_id"
-    })
-    groupId: string;
+    @PrimaryGeneratedColumn("uuid")
+    group_id: string;
 
     @Column()
     name: string;
 
-    @Column({ name: "created_at" })
-    createdAt: Date;
+    @Column()
+    created_at: Date;
 
-    @ManyToMany(() => Group, (group) => group.roles, { eager: false })
-    @JoinTable()
+    @ManyToMany(() => Role, { eager: false })
+    @JoinTable({
+        name: "group_role",
+        joinColumn: { name: "group_id", referencedColumnName: "group_id" },
+        inverseJoinColumn: { name: "role_id", referencedColumnName: "role_id" }
+    })
     roles: Role[];
 
-    @ManyToMany(() => Group, (group) => group.claims, { eager: false })
-    @JoinTable()
+    @ManyToMany(() => Claim, { eager: false })
+    @JoinTable({
+        name: "group_claim",
+        joinColumn: { name: "group_id", referencedColumnName: "group_id" },
+        inverseJoinColumn: { name: "claim_id", referencedColumnName: "claim_id" }
+    })
     claims: Claim[];
 }
