@@ -6,10 +6,17 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es2017",
+        "target": "es6",
         "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "./",
-        "incremental": true
+        "incremental": true,
+        "paths": {
+            "@models/*": [ "src/models/*" ],
+            "@common/*": [ "src/common/*" ],
+            "@database/*": [ "src/database/*" ],
+            "@config/*": [ "src/config/*" ],
+            "@providers/*": [ "src/providers/*" ]
+        }
     }
 }
