@@ -9,10 +9,14 @@ import { JwtStrategy } from '@common/helpers/jwt.strategy';
 
 import { User } from '@models/user/user.entity';
 import { UserService } from '@models/user/user.service';
-import { JwtConfig } from '@config/jwt/config';
+import { JwtConfig } from '@app/config/jwt/jwt.config';
+import { RedisService } from '@app/config/cache/redis/redis.service';
+import { CacheModule } from '@nestjs/common';
+import { RedisCacheModule } from '@app/config/cache/redis/redis.module';
 
 @Module({
     imports: [
+        RedisCacheModule,
         TypeOrmModule.forFeature([User]),
         PassportModule,
         JwtModule.register({

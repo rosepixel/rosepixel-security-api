@@ -1,29 +1,36 @@
 import { ConfigModule } from '@nestjs/config';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { APP_GUARD } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import * as RedisStore from "cache-manager-redis-store";
 import * as Joi from '@hapi/joi';
 
 import { join } from 'path';
 
-import { RolesGuard } from '@models/role/role.guard';
 import { UserModule } from '@models/user/user.module';
 import { AuthModule } from '@models/auth/auth.module';
 import { RoleModule } from '@models/role/role.module';
 import { ClaimModule } from '@models/claim/claim.module';
 import { PolicyModule } from '@models/policy/policy.module';
-import { GroupResolver } from '@models/group/group.resolver';
 import { GroupModule } from '@models/group/group.module';
-import { MySqlConfig } from '@config/databases/mysql/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MySqlConfig } from '@app/config/database/mysql/mysql.config';
+import { AppController } from '@app/app.controller';
+import { AppService } from '@app/app.service';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
+import { REDIS_CONFIG } from '@config/cache/redis/redis.config';
+import { RedisService } from '@config/cache/redis/redis.service';
 
-console.log(process.env.ORM_PASSWORD)
 @Module({
     imports: [
+        // CacheModule.register({
+        //     store: RedisStore,
+        //     host: REDIS_CONFIG.HOST,
+        //     port: REDIS_CONFIG.PORT,
+        //     auth_pass: REDIS_CONFIG.PASSWORD,
+        //     db: REDIS_CONFIG.DB_NUMBER
+        // }),
         ConfigModule.forRoot({
             validationSchema: Joi.object({
                 NODE_ENV: Joi.string().valid("development", "test", "staging", "production"),

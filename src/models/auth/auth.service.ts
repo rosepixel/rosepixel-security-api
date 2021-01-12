@@ -1,16 +1,26 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { compareSync } from 'bcrypt';
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { CACHE_MANAGER } from "@nestjs/common";
 
-import { AuthInput } from './dto/auth.input';
-import { AuthType } from './dto/auth.type';
+import { Cache } from "cache-manager";
+import { compareSync } from "bcrypt";
 
-import { UserService } from 'src/models/user/user.service';
-import { User } from 'src/models/user/user.entity';
-import { JwtService } from '@nestjs/jwt';
+import { RedisService } from "@config/cache/redis/redis.service";
+
+import { AuthInput } from "@models/auth/dto/auth.input";
+import { AuthType } from "@models/auth/dto/auth.type";
+
+import { User } from "@models/user/user.entity";
+import { UserService } from "@models/user/user.service";
+import { Logger } from "@nestjs/common";
+
+const logger = new Logger("SecurityAPI");
+
 
 @Injectable()
 export class AuthService {
     constructor(
+        private redisService: RedisService,
         private userService: UserService,
         private jwtService: JwtService
     ) { }
@@ -26,6 +36,8 @@ export class AuthService {
 
         const token = await this.login(user);
 
+        await this.redisService.set(`session:${token}`, JSON.stringify(user));
+    
         return {
             user,
             token

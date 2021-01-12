@@ -1,4 +1,4 @@
-import { JwtConfig } from "@config/jwt/config";
+import { JwtConfig } from "@app/config/jwt/jwt.config";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";

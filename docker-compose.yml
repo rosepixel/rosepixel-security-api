@@ -1,8 +1,9 @@
 version: '3.7'
 
 services:
+
   api:
-    container_name: nest_api
+    container_name: rosepixel_security_api
     build:
       context: .
       target: development
@@ -18,22 +19,57 @@ services:
     networks:
       - backend
     depends_on:
-      - postgres
-  postgres:
-    container_name: nest_db
-    image: postgres:9.6-alpine
+      - mariadb
+      - redis
+      - rabbitmq
+    
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: develop
+      MYSQL_DATABASE: security
+      MYSQL_USER: root
+      MYSQL_PASSWORD: develop
     networks:
       - backend
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_NAME}
-      PG_DATA: /var/lib/postgresql/data
     ports:
-      - 5432
+      - 3306:3306
+    restart: always
     volumes:
-      - api_db_data:/var/lib/postgresql/data
+      - mariadb_data:/var/lib/mariadb
+
+  redis:
+    image: redis
+    restart: always
+    hostname: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    command: redis-server --requirepass develop
+    volumes:
+      - redis_data:/var/lib/redis
+
+  rabbitmq:
+    image: rabbitmq
+    restart: always
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "root"
+      RABBITMQ_DEFAULT_PASS: "develop"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  
 networks:
   backend:
 volumes:
-  api_db_data:
+  postgres_data:
+  rabbitmq_data:
+  mariadb_data:
+  redis_data:
