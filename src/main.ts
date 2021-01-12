@@ -1,11 +1,8 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 import { Logger, ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
-import { SERVER_CONFIG } from '@config/server/server.config';
-import { REDIS_CONFIG } from '@config/cache/redis/redis.config';
-
 import { AppModule } from '@app/app.module';
+import { ConfigService } from '@nestjs/config';
 
 const logger = new Logger("SecurityAPI");
 
@@ -13,14 +10,7 @@ async function bootstrap() {
 
     const app = await NestFactory.create(AppModule);
 
-    app.connectMicroservice({
-        transport: Transport.REDIS,
-        options: {
-            url: `redis://${REDIS_CONFIG.HOST}:${REDIS_CONFIG.PORT}`,
-            retryAttempts: 5,
-            retryDelay: 1000
-        }
-    });
+    const config = app.get(ConfigService);
 
     app.useGlobalPipes(
         new ValidationPipe()
@@ -32,9 +22,10 @@ async function bootstrap() {
         )
     );
 
-    app.listen(SERVER_CONFIG.SERVER_PORT, () =>
-        logger.log("Security successfully started")
-    );
+    app.listen(config.get("port"), () => {
+        logger.log("Security successfully started");
+        logger.log(`Running in ${config.get("environment")} mode`);
+    });
 }
 
 bootstrap();

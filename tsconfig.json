@@ -13,11 +13,11 @@
 		"incremental": true,
 		"paths": {
 			"@app/*": ["src/*"],
-			"@models/*": ["src/models/*"],
+			"@model/*": ["src/model/*"],
 			"@common/*": ["src/common/*"],
 			"@database/*": ["src/database/*"],
-			"@config/*": ["src/config/*"],
-			"@providers/*": ["src/providers/*"]
+			"@configuration/*": ["src/configuration/*"],
+			"@provider/*": ["src/provider/*"]
 		}
 	}
 }

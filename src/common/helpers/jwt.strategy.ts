@@ -1,20 +1,21 @@
-import { JwtConfig } from "@app/config/jwt/jwt.config";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { User } from "src/models/user/user.entity";
-import { UserService } from "src/models/user/user.service";
+import { User } from "@model/user/user.entity";
+import { UserService } from "@model/user/user.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
+        private configService: ConfigService,
         private userService: UserService
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: JwtConfig.JWT_SECRET
+            secretOrKey: configService.get("JWT_SECRET")
         });
     }
 

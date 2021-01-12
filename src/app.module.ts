@@ -1,56 +1,58 @@
-import { ConfigModule } from '@nestjs/config';
-import { CacheModule, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import * as RedisStore from "cache-manager-redis-store";
-import * as Joi from '@hapi/joi';
-
 import { join } from 'path';
 
-import { UserModule } from '@models/user/user.module';
-import { AuthModule } from '@models/auth/auth.module';
-import { RoleModule } from '@models/role/role.module';
-import { ClaimModule } from '@models/claim/claim.module';
-import { PolicyModule } from '@models/policy/policy.module';
-import { GroupModule } from '@models/group/group.module';
-import { MySqlConfig } from '@app/config/database/mysql/mysql.config';
+import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
+
+import { UserModule } from '@model/user/user.module';
+import { AuthModule } from '@model/auth/auth.module';
+import { RoleModule } from '@model/role/role.module';
+import { ClaimModule } from '@model/claim/claim.module';
+import { PolicyModule } from '@model/policy/policy.module';
+import { GroupModule } from '@model/group/group.module';
+
+import { configuration } from '@configuration/configuration';
+
+import { validate } from '@app/configuration/environment.validation';
+
 import { AppController } from '@app/app.controller';
 import { AppService } from '@app/app.service';
-import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
-import { REDIS_CONFIG } from '@config/cache/redis/redis.config';
-import { RedisService } from '@config/cache/redis/redis.service';
+
+import { Claim } from "@model/claim/claim.entity";
+import { Group } from "@model/group/group.entity";
+import { Policy } from "@model/policy/policy.entity";
+import { Role } from "@model/role/role.entity";
+import { User } from "@model/user/user.entity";
 
 @Module({
     imports: [
-        // CacheModule.register({
-        //     store: RedisStore,
-        //     host: REDIS_CONFIG.HOST,
-        //     port: REDIS_CONFIG.PORT,
-        //     auth_pass: REDIS_CONFIG.PASSWORD,
-        //     db: REDIS_CONFIG.DB_NUMBER
-        // }),
         ConfigModule.forRoot({
-            validationSchema: Joi.object({
-                NODE_ENV: Joi.string().valid("development", "test", "staging", "production"),
-                SERVER_PORT: Joi.number(),
-                ORM_HOST: Joi.string(),
-                ORM_PORT: Joi.number(),
-                ORM_USERNAME: Joi.string(),
-                ORM_PASSWORD: Joi.string(),
-                ORM_DATABASE: Joi.string(),
-                ORM_SYNC: Joi.boolean().default(true),
-                JWT_SECRET: Joi.string()
+            isGlobal: true,
+            load: [configuration],
+            validate
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+                type: "mysql",
+                host: configService.get("ORM_HOST"),
+                port: configService.get("ORM_PORT"),
+                username: configService.get("ORM_USERNAME"),
+                password: configService.get("ORM_PASSWORD"),
+                database: configService.get("ORM_DATABASE"),
+                entities: [Claim, Group, Policy, Role, User],
+                synchronize: configService.get("ORM_SYNCHRONIZE")
             }),
-            envFilePath: ".env",
-            ignoreEnvFile: process.env.NODE_ENV !== "development"
+            inject: [ConfigService]
         }),
         GraphQLModule.forRoot({
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
             context: ({ req }) => ({ req })
         }),
-        TypeOrmModule.forRoot(MySqlConfig as TypeOrmModule),
         AuthModule,
         UserModule,
         RoleModule,
@@ -61,6 +63,7 @@ import { RedisService } from '@config/cache/redis/redis.service';
     controllers: [AppController],
     providers: [
         AppService,
+        ConfigService,
         {
             provide: APP_GUARD,
             useClass: JwtAuthGuard,
