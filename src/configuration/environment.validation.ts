@@ -45,6 +45,13 @@ class EnvironmentVariables {
     @IsString({ message: "A senha é obrigatória" })
     REDIS_PASSWORD: string;
 
+    @IsNumber({
+        allowInfinity: false,
+        allowNaN: false,
+        maxDecimalPlaces: 8
+    }, { message: "O TTL é obrigatório, defina o valor em segundos" })
+    REDIS_TTL: number;
+
     @IsString({ message: "O nome do domínio, IP ou endereço de loopback é obrigatório" })
     DATABASE_HOST: string;
 

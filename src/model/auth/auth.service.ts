@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-
+import { Guid } from "guid-typescript";
 import { compareSync } from "bcrypt";
 
 import { RedisCacheService } from "@app/configuration/cache/redis/redis-cache.service";
@@ -34,8 +34,6 @@ export class AuthService {
 
         const token = await this.login(user);
 
-        await this.redisCacheService.set(`session:${token}`, JSON.stringify(user));
-    
         return {
             user,
             token
@@ -43,8 +41,21 @@ export class AuthService {
     }
 
     private async login(user: User): Promise<string> {
-        const payload = { username: user.name, sub: user.user_id };
+        const session = Guid.create();
+        const payload = {
+            username: user.name,
+            sub: user.user_id,
+            session: session
+        };
 
-        return await this.jwtService.signAsync(payload);
+        const token = await this.jwtService.signAsync(payload);
+        const key = `session:${session}`;
+        const value = JSON.stringify(user);
+
+        await this.redisCacheService.set(key, value, 1);
+
+        Logger.log(key);
+
+        return token;
     }
 }

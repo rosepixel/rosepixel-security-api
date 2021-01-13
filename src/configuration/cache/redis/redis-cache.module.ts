@@ -14,7 +14,8 @@ import { RedisCacheService } from './redis-cache.service';
                 host: configService.get("REDIS_HOST"),
                 port: configService.get("REDIS_PORT"),
                 auth_pass: configService.get("REDIS_PASSWORD"),
-                db: configService.get("REDIS_DB_NUMBER")
+                db: configService.get("REDIS_DB_NUMBER"),
+                ttl: configService.get("REDIS_TTL")
             })
         })
     ],
