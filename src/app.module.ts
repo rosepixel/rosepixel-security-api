@@ -39,13 +39,13 @@ import { User } from "@model/user/user.entity";
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
                 type: "mysql",
-                host: configService.get("ORM_HOST"),
-                port: configService.get("ORM_PORT"),
-                username: configService.get("ORM_USERNAME"),
-                password: configService.get("ORM_PASSWORD"),
-                database: configService.get("ORM_DATABASE"),
+                host: configService.get("DATABASE_HOST"),
+                port: configService.get("DATABASE_PORT"),
+                username: configService.get("DATABASE_USERNAME"),
+                password: configService.get("DATABASE_PASSWORD"),
+                database: configService.get("DATABASE_DATABASE"),
                 entities: [Claim, Group, Policy, Role, User],
-                synchronize: configService.get("ORM_SYNCHRONIZE")
+                synchronize: configService.get("DATABASE_SYNCHRONIZE")
             }),
             inject: [ConfigService]
         }),
