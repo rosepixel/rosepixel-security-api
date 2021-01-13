@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Guid } from "guid-typescript";
 import { compareSync } from "bcrypt";
@@ -10,10 +10,6 @@ import { AuthType } from "@model/auth/dto/auth.type";
 
 import { User } from "@model/user/user.entity";
 import { UserService } from "@model/user/user.service";
-import { Logger } from "@nestjs/common";
-
-const logger = new Logger("SecurityAPI");
-
 
 @Injectable()
 export class AuthService {
@@ -42,6 +38,7 @@ export class AuthService {
 
     private async login(user: User): Promise<string> {
         const session = Guid.create();
+
         const payload = {
             username: user.name,
             sub: user.user_id,
@@ -54,8 +51,11 @@ export class AuthService {
 
         await this.redisCacheService.set(key, value, 1);
 
-        Logger.log(key);
-
         return token;
+    }
+
+    public async logout(token: string): Promise<void> {
+        const payload = this.jwtService.decode(token) as any;
+        await this.redisCacheService.del(payload.session.value);
     }
 }

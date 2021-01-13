@@ -73,6 +73,7 @@ type Query {
 
 type Mutation {
   login(data: AuthInput!): AuthType!
+  logout: Boolean!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!, user_id: String!): User!
 }
