@@ -35,8 +35,7 @@ export class AuthService {
             session: session
         };
 
-        await this.redisCacheService.client().set(`session:${payload.session}`, JSON.stringify(user), 1);
-
+        await this.redisCacheService.client().set(`session:${payload.session}`, JSON.stringify(user), 60 * 60 * 24 * 30 * 12);
 
         const token = await this.jwtService.signAsync(payload);
 
