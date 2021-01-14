@@ -3,13 +3,10 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { isEmptyObject } from "@common/extensions/object.extension";
-
 import { RedisCacheService } from "@configuration/cache/redis/redis-cache.service";
 
 import { User } from "@model/user/user.entity";
 import { UserService } from "@model/user/user.service";
-import { Logger } from "@nestjs/common";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
