@@ -19,7 +19,6 @@ scalar DateTime
 type Role {
   role_id: String!
   name: String!
-  description: String!
 }
 
 type Claim {

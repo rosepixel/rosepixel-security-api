@@ -37,7 +37,7 @@ import { User } from "@model/user/user.entity";
             validate
         }),
         LoggerModule.forRootAsync({
-            providers: [ConfigService],
+            imports: [ConfigService],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
                 return {
@@ -48,12 +48,17 @@ import { User } from "@model/user/user.entity";
             }
         }),
         KafkaModule.forRootAsync({
-            clientId: 'security-api-client',
-            groupId: 'security-api-group',
-            brokers: ['']
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                clientId: configService.get("KAFKA_CLIENT_ID"),
+                groupId: configService.get("KAFKA_GROUP_ID"),
+                brokers: [configService.get("KAFKA_BROKER_1")]
+            })
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
+            inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 type: "mysql",
                 host: configService.get("DATABASE_HOST"),
@@ -63,8 +68,7 @@ import { User } from "@model/user/user.entity";
                 database: configService.get("DATABASE_DATABASE"),
                 entities: [Claim, Group, Policy, Role, User],
                 synchronize: configService.get("DATABASE_SYNCHRONIZE")
-            }),
-            inject: [ConfigService]
+            })
         }),
         GraphQLModule.forRoot({
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

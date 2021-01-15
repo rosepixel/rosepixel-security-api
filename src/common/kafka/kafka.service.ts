@@ -1,4 +1,4 @@
-import { Injectable, OnModuleDestroy, OnModuleInit, LoggerService } from "@nestjs/common";
+import { Injectable, OnModuleDestroy, OnModuleInit, Logger, Inject } from "@nestjs/common";
 import { Consumer, Kafka, Producer } from "kafkajs";
 import {
     SUBSCRIBER_FIXED_FN_REF_MAP,
@@ -16,8 +16,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     private readonly consumerSuffix = "-" + Math.floor(Math.random() * 100000);
 
     constructor(
-        private logger: LoggerService,
-        private kafkaConfig: KafkaConfig
+        @Inject("KAFKA_OPTIONS") private kafkaConfig: KafkaConfig
     ) {
         this.kafka = new Kafka({
             clientId: this.kafkaConfig.clientId,
@@ -92,7 +91,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
                 topic: kafkaTopic,
                 messages: [{ value: JSON.stringify(kafkaMessage) }]
             })
-            .catch(error => this.logger.error(error.message, error));
+            .catch(error => Logger.error(error.message, error));
 
         await this.producer.disconnect();
 
