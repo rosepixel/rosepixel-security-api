@@ -1,19 +1,19 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
+import { Public } from '@common/decorators/is-public.decorator';
+
 import { Roles } from '@model/role/role.decorator';
 import { Role } from '@model/role/role.enum';
-
 import { CreateUserInput } from '@model/user/odt/create-user.input';
 import { UpdateUserInput } from '@model/user/odt/update-user.input';
 import { User } from '@model/user/user.entity';
 import { UserService } from '@model/user/user.service';
-import { Public } from '@common/decorators/is-public.decorator';
 
 @Resolver()
 export class UserResolver {
     constructor(private userService: UserService) { }
 
-    @Roles(Role.SecurityApiFindAllUsers)
+    @Roles(Role.SecurityApiUserFindAllUsers)
     @Query(() => [User])
     async findAllUsers(): Promise<User[]> {
         const users = await this.userService.findAllUsers();
@@ -21,7 +21,7 @@ export class UserResolver {
         return users;
     }
 
-    @Roles(Role.SecurityApiGetUserById)
+    @Roles(Role.SecurityApiUserGetUserById)
     @Query(() => User)
     async getUserById(@Args('user_id') user_id: string): Promise<User> {
         const user = await this.userService.getUserById(user_id);
@@ -29,7 +29,7 @@ export class UserResolver {
         return user;
     }
 
-    @Roles(Role.SecurityApiGetUserByEmail)
+    @Roles(Role.SecurityApiUserGetUserByEmail)
     @Query(() => User)
     async getUserByEmail(@Args('email') email: string): Promise<User> {
         const user = await this.userService.getUserByEmail(email);
@@ -45,7 +45,7 @@ export class UserResolver {
         return user;
     }
 
-    @Roles(Role.SecurityApiUpdateUser)
+    @Roles(Role.SecurityApiUserUpdateUser)
     @Mutation(() => User)
     async updateUser(
         @Args('user_id') user_id: string,

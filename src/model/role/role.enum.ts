@@ -1,6 +1,6 @@
 export enum Role {
-    SecurityApiFindAllUsers = "security-api-find-all-users",
-    SecurityApiGetUserById = "security-api-get-user-by-id",
-    SecurityApiGetUserByEmail = "security-api-get-user-by-email",
-    SecurityApiUpdateUser = "security-api-update-user"
+    SecurityApiUserFindAllUsers = "security-api-user-find-all-users",
+    SecurityApiUserGetUserById = "security-api-user-get-user-by-id",
+    SecurityApiUserGetUserByEmail = "security-api-user-get-user-by-email",
+    SecurityApiUserUpdateUser = "security-api-user-update-user"
 }

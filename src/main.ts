@@ -1,8 +1,8 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Logger, ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from '@app/app.module';
-import { ConfigService } from '@nestjs/config';
 
 const logger = new Logger("SecurityAPI");
 

@@ -49,6 +49,8 @@ export class UserService {
         const user = this.userRepository.create(data);
         const userSaved = await this.userRepository.save(user);
 
+        // TODO: Enviar email ou sms para confirmar a conta, comunicar via fila e mensagem.
+
         if (!userSaved) {
             throw new InternalServerErrorException("Problema para criar um usuário.");
         }

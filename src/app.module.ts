@@ -4,9 +4,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { LoggerModule } from "nestjs-pino";
 import { join } from 'path';
 
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
+import { KafkaModule } from "@common/kafka/kafka.module";
+
+import { configuration } from '@configuration/configuration';
+import { validate } from '@configuration/environment.validation';
 
 import { UserModule } from '@model/user/user.module';
 import { AuthModule } from '@model/auth/auth.module';
@@ -14,10 +19,6 @@ import { RoleModule } from '@model/role/role.module';
 import { ClaimModule } from '@model/claim/claim.module';
 import { PolicyModule } from '@model/policy/policy.module';
 import { GroupModule } from '@model/group/group.module';
-
-import { configuration } from '@configuration/configuration';
-
-import { validate } from '@app/configuration/environment.validation';
 
 import { AppController } from '@app/app.controller';
 import { AppService } from '@app/app.service';
@@ -34,6 +35,22 @@ import { User } from "@model/user/user.entity";
             isGlobal: true,
             load: [configuration],
             validate
+        }),
+        LoggerModule.forRootAsync({
+            providers: [ConfigService],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => {
+                return {
+                    pinoHttp: [{
+                        level: configService.get("LOGGER_LEVEL")
+                    }, configService.get("LOGGER_STREAM")]
+                }
+            }
+        }),
+        KafkaModule.forRootAsync({
+            clientId: 'security-api-client',
+            groupId: 'security-api-group',
+            brokers: ['']
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
