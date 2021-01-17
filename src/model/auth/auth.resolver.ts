@@ -6,6 +6,7 @@ import { AuthInput } from "@model/auth/dto/auth.input";
 import { AuthType } from "@model/auth/dto/auth.type";
 import { AuthService } from "@model/auth/auth.service";
 import { CurrentToken } from "@app/common/decorators/current-token.decorator";
+import { ResponseType } from "@app/model/auth/dto/empty.type";
 
 @Resolver()
 export class AuthResolver {
@@ -19,10 +20,17 @@ export class AuthResolver {
         return await this.authService.login(data);
     }
 
-    @Mutation(() => Boolean)
-    public async logout(@CurrentToken() token: string): Promise<Boolean> {
+    @Mutation(() => ResponseType)
+    public async logout(@CurrentToken() token: string): Promise<ResponseType> {
         await this.authService.logout(token);
 
-        return true;
+        return new ResponseType();
+    }
+
+    @Mutation(() => ResponseType)
+    public async recover(): Promise<ResponseType> {
+
+
+        return new ResponseType();
     }
 }

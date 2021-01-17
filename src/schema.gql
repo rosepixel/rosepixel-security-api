@@ -7,6 +7,10 @@ type User {
   name: String!
   email: String!
   password: String
+  verification_token: String
+  verification_token_submissions: Float
+  verification_token_created_at: DateTime
+  is_verified: Boolean
   policies: [Policy!]!
   created_at: DateTime!
 }
@@ -64,6 +68,11 @@ type AuthType {
   token: String!
 }
 
+type ResponseType {
+  error: Boolean!
+  message: String!
+}
+
 type Query {
   findAllUsers: [User!]!
   getUserById(user_id: String!): User!
@@ -72,7 +81,8 @@ type Query {
 
 type Mutation {
   login(data: AuthInput!): AuthType!
-  logout: Boolean!
+  logout: ResponseType!
+  recover: ResponseType!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!, user_id: String!): User!
 }
