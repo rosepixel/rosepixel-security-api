@@ -1,17 +1,17 @@
 export class KafkaPayload {
-    public body: any;
-    public messageId: string;
-    public messageType: string;
-    public topicName: string;
-    public createdTime?: string;
+    public payload_id: string;
+    public message: any;
+    public message_type: string;
+    public topic_name: string;
+    public created_time?: string;
 
-    create?(messageId, body, messageType, topicName): KafkaPayload {
+    create?(payload_id: string, message: any, message_type: string, topic_name: string): KafkaPayload {
         return {
-            messageId,
-            body,
-            messageType,
-            topicName,
-            createdTime: new Date().toISOString()
+            payload_id,
+            message,
+            message_type,
+            topic_name,
+            created_time: new Date().toISOString()
         };
     }
 }

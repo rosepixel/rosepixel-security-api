@@ -23,6 +23,22 @@ export class User {
     @Column({ transformer: hashPasswordTransform })
     password?: string;
 
+    @Exclude()
+    @Column()
+    verification_token: string;
+
+    @Exclude()
+    @Column()
+    verification_token_submissions: number;
+
+    @Exclude()
+    @Column({ type: "timestamp" })
+    verification_token_created_at: Date;
+
+    @Exclude()
+    @Column()
+    is_verified: boolean;
+
     @OneToMany(() => Policy, (policy) => policy.user)
     policies: Policy[];
 

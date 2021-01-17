@@ -1,13 +1,12 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Guid } from "guid-typescript";
 import { compareSync } from "bcrypt";
 
-import { RedisCacheService } from "@app/configuration/cache/redis/redis-cache.service";
+import { RedisCacheService } from "@configuration/cache/redis/redis-cache.service";
 
 import { AuthInput } from "@model/auth/dto/auth.input";
 import { AuthType } from "@model/auth/dto/auth.type";
-
 import { UserService } from "@model/user/user.service";
 
 @Injectable()

@@ -37,7 +37,7 @@ import { User } from "@model/user/user.entity";
             validate
         }),
         LoggerModule.forRootAsync({
-            imports: [ConfigService],
+            imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
                 return {
