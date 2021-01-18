@@ -37,8 +37,17 @@ export class User {
 
     @Exclude()
     @Column()
+    reset_password_token?: string;
+
+    @Exclude()
+    @Column({ type: "timestamp" })
+    reset_password_created_at?: Date;
+
+    @Exclude()
+    @Column()
     is_verified?: boolean;
 
+    @Exclude()
     @OneToMany(() => Policy, (policy) => policy.user)
     policies: Policy[];
 

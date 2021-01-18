@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Guid } from 'guid-typescript';
 import { Repository } from 'typeorm';
+import { DateTime } from "luxon";
 
 import { KafkaService } from '@common/kafka/kafka.service';
 import { KafkaPayload } from '@common/kafka/kafka.message';
@@ -59,23 +60,23 @@ export class UserService {
             verification_token_submissions: 1
         });
 
-        // TODO: gerar contratos dos parâmetros fixados
         const payload: KafkaPayload = {
             payload_id: Guid.raw(),
+            topic_name: "local.security.fct.user.verification-link.v1",
+            message_type: "user.verification-link.v1",
             message: {
                 external_id: user.user_id,
                 template: {
-                    type: "user.verification-link.v1",
-                    params: {
+                    template_id: "user.verification-link.v1",
+                    parameters: {
+                        route: "verification_link",
                         verification_token: user.verification_token
                     }
                 }
-            },
-            message_type: "user.verification-link.v1",
-            topic_name: "aws.security.fct.user.verification-link.v1"
+            }
         };
 
-        this.kafkaService.sendMessage("aws.security.fct.user.verification-link.v1", payload);
+        this.kafkaService.sendMessage("local.security.fct.user.verification-link.v1", payload);
 
         if (!user) {
             throw new InternalServerErrorException("Problema para criar um usuário.");
@@ -90,7 +91,7 @@ export class UserService {
         return await this.userRepository.save({ ...user, ...data });
     }
 
-    public async resetPassword(email: string): Promise<void> {
+    public async recover(email: string): Promise<void> {
 
         const user = await this.userRepository.findOne({
             where: {
@@ -99,18 +100,54 @@ export class UserService {
         });
 
         if (user) {
+            await this.userRepository.save({
+                ...user,
+                reset_password_token: Guid.raw(),
+                reset_password_created_at: new Date()
+            });
+
             const payload: KafkaPayload = {
-                payload_id: "",
-                message: "",
-                message_type: "",
-                topic_name: ""
+                payload_id: Guid.raw(),
+                topic_name: "local.security.fct.user.reset-password.v1",
+                message_type: "user.reset-password.v1",
+                message: {
+                    external_id: user.user_id,
+                    template: {
+                        template_id: "user.reset-password.v1",
+                        parameters: {
+                            route: "reset_password_link",
+                            reset_password_token: user.reset_password_token
+                        }
+                    }
+                }
             };
 
-            this.kafkaService.sendMessage("", payload);
-        } else {
-            // TODO: logar a tentativa falha?
+            this.kafkaService.sendMessage("local.security.fct.user.reset-password.v1", payload);
         }
     }
 
-    // public async 
+    public async updatePassword(reset_password_token: string, password: string): Promise<void> {
+        const user = await this.userRepository.findOne({
+            where: {
+                reset_password_token
+            }
+        });
+
+        let expires_at = DateTime.fromJSDate(user.reset_password_created_at).plus({ hours: 12 });
+        let current = new DateTime();
+
+        if (!user) {
+            throw new InternalServerErrorException("Token inválido.");
+        }
+        if (expires_at > current) {
+            throw new InternalServerErrorException("Tempo de resetar a senha expirado, favor resetar novamente a senha.");
+        }
+
+        await this.userRepository.save({
+            ...user,
+            password,
+            reset_password_token: null,
+            reset_password_created_at: null
+        });
+    }
 }

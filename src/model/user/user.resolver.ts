@@ -53,9 +53,22 @@ export class UserResolver {
 
     @Recaptcha()
     @Mutation(() => ActionResultType)
-    public async resetPassword(@Args("email") email: string): Promise<ActionResultType> {
-        await this.userService.resetPassword(email);
+    public async recover(@Args("email") email: string): Promise<ActionResultType> {
+        await this.userService.recover(email);
 
-        return new ActionResultType();
+        return {
+            error: false
+        };
+    }
+
+    public async updatePassword(
+        @Args("reset_password_token") reset_password_token: string,
+        @Args("password") password: string,
+    ): Promise<ActionResultType> {
+        await this.userService.updatePassword(reset_password_token, password);
+
+        return {
+            error: false
+        };
     }
 }

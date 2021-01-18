@@ -23,7 +23,11 @@ export class AuthResolver {
     }
 
     @Mutation(() => ActionResultType)
-    public async logout(@CurrentToken() token: string): Promise<void> {
+    public async logout(@CurrentToken() token: string): Promise<ActionResultType> {
         await this.authService.logout(token);
+
+        return {
+            error: false
+        };
     }
 }
