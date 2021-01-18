@@ -28,6 +28,8 @@ import { Group } from "@model/group/group.entity";
 import { Policy } from "@model/policy/policy.entity";
 import { Role } from "@model/role/role.entity";
 import { User } from "@model/user/user.entity";
+import { GoogleRecaptchaModule, GoogleRecaptchaNetwork } from '@nestlab/google-recaptcha';
+import { config } from 'dotenv/types';
 
 @Module({
     imports: [
@@ -35,6 +37,16 @@ import { User } from "@model/user/user.entity";
             isGlobal: true,
             load: [configuration],
             validate
+        }),
+        GoogleRecaptchaModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+                secretKey: configService.get("RECAPTCHA_SECRET"),
+                response: req => req.headers.recaptcha,
+                skipIf: configService.get("NODE_ENV") !== "production",
+                network: GoogleRecaptchaNetwork.Recaptcha
+            }),
+            inject: [ConfigService],
         }),
         LoggerModule.forRootAsync({
             imports: [ConfigModule],

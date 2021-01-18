@@ -5,6 +5,8 @@ import { compareSync } from "bcrypt";
 
 import { RedisCacheService } from "@configuration/cache/redis/redis-cache.service";
 
+import { KafkaService } from "@common/kafka/kafka.service";
+
 import { AuthInput } from "@model/auth/dto/auth.input";
 import { AuthType } from "@model/auth/dto/auth.type";
 import { UserService } from "@model/user/user.service";
@@ -12,6 +14,7 @@ import { UserService } from "@model/user/user.service";
 @Injectable()
 export class AuthService {
     constructor(
+        private kafkaService: KafkaService,
         private redisCacheService: RedisCacheService,
         private userService: UserService,
         private jwtService: JwtService

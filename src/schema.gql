@@ -63,14 +63,14 @@ type Policy {
   groups: [Group!]!
 }
 
+type ActionResultType {
+  error: Boolean!
+  message: String!
+}
+
 type AuthType {
   user: User!
   token: String!
-}
-
-type ResponseType {
-  error: Boolean!
-  message: String!
 }
 
 type Query {
@@ -81,10 +81,10 @@ type Query {
 
 type Mutation {
   login(data: AuthInput!): AuthType!
-  logout: ResponseType!
-  recover: ResponseType!
+  logout: ActionResultType!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!, user_id: String!): User!
+  resetPassword(email: String!): ActionResultType!
 }
 
 input AuthInput {

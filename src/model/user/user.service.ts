@@ -51,7 +51,7 @@ export class UserService {
 
     async createUser(data: CreateUserInput): Promise<User> {
 
-        const user = this.userRepository.create({
+        const user = await this.userRepository.save({
             ...data,
             is_verified: false,
             verification_token: Guid.raw(),
@@ -59,13 +59,17 @@ export class UserService {
             verification_token_submissions: 1
         });
 
-        const userSaved = await this.userRepository.save(user);
-
+        // TODO: gerar contratos dos parâmetros fixados
         const payload: KafkaPayload = {
-            payload_id: user.verification_token,
+            payload_id: Guid.raw(),
             message: {
-                template_code: "user.verification-link.v1",
-                id: ""
+                external_id: user.user_id,
+                template: {
+                    type: "user.verification-link.v1",
+                    params: {
+                        verification_token: user.verification_token
+                    }
+                }
             },
             message_type: "user.verification-link.v1",
             topic_name: "aws.security.fct.user.verification-link.v1"
@@ -73,20 +77,40 @@ export class UserService {
 
         this.kafkaService.sendMessage("aws.security.fct.user.verification-link.v1", payload);
 
-        if (!userSaved) {
+        if (!user) {
             throw new InternalServerErrorException("Problema para criar um usuário.");
         }
 
-        return userSaved;
+        return user;
     }
 
     async updateUser(user_id: string, data: UpdateUserInput): Promise<User> {
         const user = await this.getUserById(user_id);
 
-        await this.userRepository.update(user, { ...data });
-
-        const userUpdated = this.userRepository.create({ ...user, ...data });
-
-        return userUpdated;
+        return await this.userRepository.save({ ...user, ...data });
     }
+
+    public async resetPassword(email: string): Promise<void> {
+
+        const user = await this.userRepository.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        if (user) {
+            const payload: KafkaPayload = {
+                payload_id: "",
+                message: "",
+                message_type: "",
+                topic_name: ""
+            };
+
+            this.kafkaService.sendMessage("", payload);
+        } else {
+            // TODO: logar a tentativa falha?
+        }
+    }
+
+    // public async 
 }

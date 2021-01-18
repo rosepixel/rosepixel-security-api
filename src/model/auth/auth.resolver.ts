@@ -1,17 +1,19 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 
 import { Public } from "@common/decorators/is-public.decorator";
+import { CurrentToken } from "@common/decorators/current-token.decorator";
+import { ActionResultType } from "@common/types/action-result.type";
 
 import { AuthInput } from "@model/auth/dto/auth.input";
 import { AuthType } from "@model/auth/dto/auth.type";
 import { AuthService } from "@model/auth/auth.service";
-import { CurrentToken } from "@app/common/decorators/current-token.decorator";
-import { ResponseType } from "@app/model/auth/dto/empty.type";
+import { Recaptcha } from "@nestlab/google-recaptcha";
 
 @Resolver()
 export class AuthResolver {
     constructor(private authService: AuthService) { }
 
+    @Recaptcha()
     @Public()
     @Mutation(() => AuthType)
     public async login(
@@ -20,17 +22,8 @@ export class AuthResolver {
         return await this.authService.login(data);
     }
 
-    @Mutation(() => ResponseType)
-    public async logout(@CurrentToken() token: string): Promise<ResponseType> {
+    @Mutation(() => ActionResultType)
+    public async logout(@CurrentToken() token: string): Promise<void> {
         await this.authService.logout(token);
-
-        return new ResponseType();
-    }
-
-    @Mutation(() => ResponseType)
-    public async recover(): Promise<ResponseType> {
-
-
-        return new ResponseType();
     }
 }
