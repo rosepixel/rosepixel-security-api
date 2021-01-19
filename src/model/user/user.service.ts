@@ -133,14 +133,15 @@ export class UserService {
             }
         });
 
-        let expires_at = DateTime.fromJSDate(user.reset_password_created_at).plus({ hours: 12 });
-        let current = new DateTime();
-
         if (!user) {
             throw new InternalServerErrorException("Token inválido.");
         }
+
+        let expires_at = DateTime.fromJSDate(user.reset_password_created_at).plus({ hours: 12 });
+        let current = new DateTime();
+
         if (expires_at > current) {
-            throw new InternalServerErrorException("Tempo de resetar a senha expirado, favor resetar novamente a senha.");
+            throw new InternalServerErrorException("Token expirado, favor resetar a senha novamente.");
         }
 
         await this.userRepository.save({
