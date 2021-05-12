@@ -12,7 +12,6 @@
 		"baseUrl": "./",
 		"incremental": true,
 		"paths": {
-			"@app/*": ["src/*"],
 			"@model/*": ["src/model/*"],
 			"@common/*": ["src/common/*"],
 			"@database/*": ["src/database/*"],

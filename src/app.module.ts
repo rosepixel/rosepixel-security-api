@@ -6,6 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { LoggerModule } from "nestjs-pino";
 import { join } from 'path';
+import {
+    GoogleRecaptchaModule,
+    GoogleRecaptchaNetwork
+} from '@nestlab/google-recaptcha';
 
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { KafkaModule } from "@common/kafka/kafka.module";
@@ -20,16 +24,14 @@ import { ClaimModule } from '@model/claim/claim.module';
 import { PolicyModule } from '@model/policy/policy.module';
 import { GroupModule } from '@model/group/group.module';
 
-import { AppController } from '@app/app.controller';
-import { AppService } from '@app/app.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 import { Claim } from "@model/claim/claim.entity";
 import { Group } from "@model/group/group.entity";
 import { Policy } from "@model/policy/policy.entity";
 import { Role } from "@model/role/role.entity";
 import { User } from "@model/user/user.entity";
-import { GoogleRecaptchaModule, GoogleRecaptchaNetwork } from '@nestlab/google-recaptcha';
-import { config } from 'dotenv/types';
 
 @Module({
     imports: [

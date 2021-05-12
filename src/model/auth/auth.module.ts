@@ -1,18 +1,15 @@
 import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { JwtModule } from "@nestjs/jwt";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
 import { PassportModule } from "@nestjs/passport";
 
 import { RedisCacheModule } from "@configuration/cache/redis/redis-cache.module";
-
 import { JwtStrategy } from "@common/helpers/jwt.strategy";
-
 import { AuthResolver } from "@model/auth/auth.resolver";
 import { AuthService } from "@model/auth/auth.service";
-
 import { User } from "@model/user/user.entity";
 import { UserService } from "@model/user/user.service";
-import { ConfigService } from "@nestjs/config";
 
 @Module({
     imports: [

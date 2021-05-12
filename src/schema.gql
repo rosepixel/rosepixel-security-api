@@ -10,6 +10,8 @@ type User {
   verification_token: String
   verification_token_submissions: Float
   verification_token_created_at: DateTime
+  reset_password_token: String
+  reset_password_created_at: DateTime
   is_verified: Boolean
   policies: [Policy!]!
   created_at: DateTime!
@@ -84,7 +86,7 @@ type Mutation {
   logout: ActionResultType!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!, user_id: String!): User!
-  resetPassword(email: String!): ActionResultType!
+  recover(email: String!): ActionResultType!
 }
 
 input AuthInput {

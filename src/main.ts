@@ -1,8 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { Logger, ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+    Logger,
+    ClassSerializerInterceptor,
+    ValidationPipe
+} from '@nestjs/common';
 
-import { AppModule } from '@app/app.module';
+import { AppModule } from './app.module';
 
 const logger = new Logger("SecurityAPI");
 
@@ -24,7 +28,7 @@ async function bootstrap() {
 
     app.listen(config.get("port"), () => {
         logger.log("Security successfully started");
-        logger.log(`Running in ${config.get("environment")} mode`);
+        logger.log(`Running in ${config.get("host")}:${config.get("port")} in ${config.get("environment")} mode`);
     });
 }
 
